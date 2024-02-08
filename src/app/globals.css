@@ -3,31 +3,67 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
   }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.wrapper {
+  @apply absolute flex justify-center items-center w-full h-full bg-wrapper;
+}
+
+.field {
+  border: rgba(141, 141, 141, 0.416) solid 1px;
+  min-width: 10px;
+}
+
+input,
+select {
+  @apply outline-none font-normal border-[1px] border-black rounded-sm box-border h-7;
+}
+input:focus,
+select:focus {
+  @apply border-[2px] border-[yellow];
+}
+
+.table-default {
+  width: 100%;
+}
+
+.table-default,
+tr,
+td,
+th {
+  @apply border-2 border-black border-solid;
+}
+
+.table-default td {
+  @apply bg-[white];
+}
+
+.button-default {
+  @apply bg-[lightgrey] font-normal;
+}
+
+.button-default-l {
+  @apply bg-[lightgrey] font-normal px-2 py-6;
+}
+
+.button-close {
+  @apply bg-[red] font-normal;
+}
+
+.modal {
+  @apply shadow-md max-w-[1000px] bg-[#BDD6F5] text-black w-[95%] rounded-xl border-[0px] rounded-[2px] border-white border-r-[grey] border-b-[grey];
 }

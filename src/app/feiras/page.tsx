@@ -4,7 +4,7 @@ export default function Feiras() {
     <>
       <main>
         <div className="wrapper">
-          <div className="shadow-2xl gap-4 flex flex-col bg-[#BDD6F5] text-black w-[95%] py-10 px-[20px] rounded-xl">
+          <div className="modal gap-4 max-w-[1000px] flex flex-col py-10 px-[20px]">
             <fieldset className="field px-[5px] pt-10 pb-2 max-w-full">
               <legend className="text-[10px]">
                 Qtd de feiras para calculo
@@ -12,12 +12,12 @@ export default function Feiras() {
               <div className="flex flex-row gap-[5px] text-xs">
                 <label className="flex flex-col font-bold">
                   Mês
-                  <input type="month" className="font-normal" />
+                  <input type="month" className="font-normal input-default " />
                 </label>
                 <label className="flex flex-col font-bold">
                   Exercício
                   <input
-                    className="font-normal"
+                    className="input-default "
                     type="number"
                     min={1950}
                     max={Number(new Date().getFullYear())}
@@ -39,7 +39,7 @@ export default function Feiras() {
                       <input
                         type="text"
                         readOnly
-                        className="w-full max-w-[80px] font-normal"
+                        className="w-full max-w-[80px] input-default "
                       />
                     </label>
                     <label className="flex flex-col font-bold">
@@ -47,7 +47,7 @@ export default function Feiras() {
                       <input
                         type="text"
                         readOnly
-                        className="w-full max-w-[80px] font-normal"
+                        className="w-full max-w-[80px] input-default "
                       />
                     </label>
                     <label className="flex flex-col font-bold">
@@ -55,7 +55,7 @@ export default function Feiras() {
                       <input
                         type="text"
                         readOnly
-                        className="w-full max-w-[80px] font-normal"
+                        className="w-full max-w-[80px] input-default "
                       />
                     </label>
                     <label className="flex flex-col font-bold">
@@ -63,7 +63,7 @@ export default function Feiras() {
                       <input
                         type="text"
                         readOnly
-                        className="w-full max-w-[80px] font-normal"
+                        className="w-full max-w-[80px] input-default "
                       />
                     </label>
                     <label className="flex flex-col font-bold">
@@ -71,7 +71,7 @@ export default function Feiras() {
                       <input
                         type="text"
                         readOnly
-                        className="w-full max-w-[80px] font-normal"
+                        className="w-full max-w-[80px] input-default "
                       />
                     </label>
                     <label className="flex flex-col font-bold">
@@ -79,7 +79,7 @@ export default function Feiras() {
                       <input
                         type="text"
                         readOnly
-                        className="w-full max-w-[80px] font-normal"
+                        className="w-full max-w-[80px] input-default "
                       />
                     </label>
                     <label className="flex flex-col font-bold">
@@ -87,7 +87,7 @@ export default function Feiras() {
                       <input
                         type="text"
                         readOnly
-                        className="w-full max-w-[80px] font-normal"
+                        className="w-full max-w-[80px] input-default "
                       />
                     </label>
                   </div>
@@ -98,9 +98,7 @@ export default function Feiras() {
                 </div>
               </div>
               <div>
-                <button className="bg-[lightgrey] text-xs p-2">
-                  Adicionar
-                </button>
+                <button className="button-default">Adicionar</button>
               </div>
             </fieldset>
             <fieldset className="field px-[5px] pt-10 pb-2 max-w-full">
