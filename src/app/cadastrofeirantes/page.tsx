@@ -1,11 +1,56 @@
 "use client";
 
+import { useAppContext } from "@/context";
 import { CPFMask, OnlyNumbersMask, PhoneMask } from "@/functions/masks";
+import { TInsertFeirante, TReadSectors } from "@/interfaces";
 import { groupsMock, sectorsMock } from "@/mocks";
-import { useState } from "react";
+import { registerFeiranteSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Cadastro_feirantes() {
-  const [sectorValue, setSectorValue] = useState<string | number>("");
+  const [sector, setSector] = useState<TReadSectors>();
+  const [qtdBancas, setQtdBancas] = useState<number>(1);
+  const [totalValue, setTotalValue] = useState<number>(0);
+  const { fiscalList, feirantesList, setFeirantesList } = useAppContext();
+
+  const previewImageRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (sector?.value) {
+      setTotalValue(+qtdBancas * 3.56 * Number(sector?.value));
+    }
+  }, [qtdBancas, sector]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TInsertFeirante>({
+    resolver: zodResolver(registerFeiranteSchema),
+  });
+
+  useEffect(() => {
+    console.log(feirantesList);
+  }, [feirantesList]);
+
+  const onSubmit = (data: TInsertFeirante) => {
+    setFeirantesList([
+      ...feirantesList,
+      {
+        ...data,
+        id: feirantesList.length
+          ? Math.max(...feirantesList.map((feirante) => feirante.id)) + 1
+          : 1,
+      },
+    ]);
+
+    reset();
+    setSector(undefined);
+    setQtdBancas(1);
+  };
 
   return (
     <div className="wrapper">
@@ -14,7 +59,10 @@ export default function Cadastro_feirantes() {
           <h2 className="px-2 py-1">Cadastro Feirantes</h2>
           <button className="button-close px-1 py-1">X</button>
         </div>
-        <form className="flex flex-col font-normal px-[40px] pt-[50px] pb-[24px]">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col font-normal px-[40px] pt-[50px] pb-[24px]"
+        >
           <div className="flex gap-[12px] justify-between">
             <div className="flex flex-col gap-[25px]  w-[80%]">
               <div className="flex gap-[12px] w-[80%]">
@@ -23,9 +71,11 @@ export default function Cadastro_feirantes() {
                     C.P.F.
                     <input
                       type="text"
-                      onChange={(e) => {
-                        CPFMask(e);
-                      }}
+                      {...register("CPF", {
+                        onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                          CPFMask(e);
+                        },
+                      })}
                       placeholder="___.___.___-__"
                     />
                   </label>
@@ -33,9 +83,12 @@ export default function Cadastro_feirantes() {
                     R.G.
                     <input
                       type="text"
-                      onChange={(e) => {
-                        OnlyNumbersMask(e);
-                      }}
+                      maxLength={9}
+                      {...register("RG", {
+                        onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                          OnlyNumbersMask(e);
+                        },
+                      })}
                     />
                   </label>
                 </div>
@@ -43,7 +96,7 @@ export default function Cadastro_feirantes() {
                 <div className="flex flex-col w-2/3 gap-[25px]">
                   <label className="flex flex-col">
                     Nome (feirante)
-                    <input type="text" />
+                    <input type="text" {...register("name")} />
                   </label>
 
                   <label className="flex flex-col">
@@ -52,6 +105,7 @@ export default function Cadastro_feirantes() {
                       type="text"
                       placeholder="(Logradouro, numero, CEP, cidade, estado)"
                       className="input-default"
+                      {...register("address")}
                     />
                   </label>
                 </div>
@@ -60,20 +114,34 @@ export default function Cadastro_feirantes() {
               <div className="flex gap-[12px] w-full">
                 <label className="flex flex-col w-1/4">
                   QTD BANCA(S)
-                  <input type="number" className="w-full input-default" />
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    className="w-full input-default"
+                    {...register("qtd_bancas", {
+                      onChange(e) {
+                        setQtdBancas(Number(e.target.value));
+                      },
+                    })}
+                    defaultValue={1}
+                  />
                 </label>
 
                 <label className="flex flex-col w-[40%]">
                   SETOR
                   <select
-                    onChange={(e) => {
-                      const value = sectorsMock.find(
-                        (sector) => sector.id == Number(e.target.value)
-                      );
-                      setSectorValue(value?.value!);
-                    }}
                     className="input-default"
+                    {...register("sector", {
+                      onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                        const sector = sectorsMock.find(
+                          (sector) => sector.id == Number(e.target.value)
+                        );
+                        setSector(sector);
+                      },
+                    })}
                   >
+                    <option value={""}>Selecionar</option>
                     {sectorsMock.map((sector) => (
                       <option key={sector.id} value={sector.id}>
                         {sector.description}
@@ -84,17 +152,24 @@ export default function Cadastro_feirantes() {
 
                 <label className="flex flex-col w-[10%]">
                   VL. M2
-                  <input
-                    type="number"
-                    readOnly
-                    step={0.01}
-                    value={sectorValue || sectorsMock[0].value}
-                  />
+                  <input type="number" readOnly value={sector?.value || ""} />
                 </label>
 
                 <label className="flex flex-col w-auto">
                   Valor R$
-                  <span> VALOR A SE COLOCAR + TIPO</span>
+                  {sector && (
+                    <span className="font-bold">
+                      {totalValue.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                        maximumFractionDigits: 4,
+                      })}{" "}
+                      {/* {
+                        groupsMock.find((group) => group.id == sector?.group!)
+                          ?.name
+                      } */}
+                    </span>
+                  )}
                 </label>
               </div>
 
@@ -104,19 +179,24 @@ export default function Cadastro_feirantes() {
                   <input
                     type="tel"
                     maxLength={15}
-                    onChange={(e) => {
-                      PhoneMask(e);
-                    }}
                     className="w-full input-default"
+                    {...register("fone", {
+                      onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                        PhoneMask(e);
+                      },
+                    })}
                   />
                 </label>
 
                 <label className="flex flex-col  w-[30%]">
                   FISCAL
-                  <select className="input-default">
-                    <option value={"Fiscal"}> Fiscal</option>
-                    <option value={"Fiscal"}> Fiscal</option>
-                    <option value={"Fiscal"}> Fiscal</option>
+                  <select {...register("fiscalId")} className="input-default">
+                    <option value={""}> Selecionar</option>
+                    {fiscalList.map((fiscal) => (
+                      <option key={fiscal.id} value={fiscal.id}>
+                        {fiscal.name}
+                      </option>
+                    ))}
                   </select>
                 </label>
 
@@ -134,13 +214,35 @@ export default function Cadastro_feirantes() {
             </div>
 
             <div className="flex flex-col gap-[12px] w-[25%]">
-              <fieldset className="field h-full">
+              <fieldset className="field h-full min-h-[10px]">
                 <legend>FOTO</legend>
+                <img className="m-w-full m-h-full" ref={previewImageRef} />
               </fieldset>
 
-              <button className="button-default self-center p-2">
-                Inserir Foto
-              </button>
+              <label className="button-default self-center p-2">
+                <input
+                  {...register("file", {
+                    onChange(e: React.ChangeEvent<HTMLInputElement>) {
+                      const inputTarget = e.target;
+                      const file = inputTarget.files![0];
+
+                      if (file) {
+                        const reader = new FileReader();
+
+                        reader.onload = () => {
+                          previewImageRef.current!.src = String(reader.result!);
+                        };
+
+                        reader.readAsDataURL(file);
+                      }
+                    },
+                  })}
+                  className="hidden"
+                  type="file"
+                  accept="image/**"
+                />
+                <span>Inserir Foto</span>
+              </label>
             </div>
           </div>
 
@@ -149,33 +251,33 @@ export default function Cadastro_feirantes() {
             <div className="flex gap-[25px] mt-2">
               <div className="flex flex-col">
                 <label className="flex items-center gap-1">
-                  <input type="checkbox" />
+                  <input {...register("days.monday")} type="checkbox" />
                   SEGUNDA
                 </label>
                 <label className="flex items-center gap-1">
-                  <input type="checkbox" />
+                  <input {...register("days.tuesday")} type="checkbox" />
                   TERÇA
                 </label>
                 <label className="flex items-center gap-1">
-                  <input type="checkbox" />
+                  <input {...register("days.wednesday")} type="checkbox" />
                   QUARTA
                 </label>
                 <label className="flex items-center gap-1">
-                  <input type="checkbox" />
+                  <input {...register("days.thrusday")} type="checkbox" />
                   QUINTA
                 </label>
               </div>
               <div className="flex flex-col">
                 <label className="flex items-center gap-1">
-                  <input type="checkbox" />
+                  <input {...register("days.friday")} type="checkbox" />
                   SEXTA
                 </label>
                 <label className="flex items-center gap-1">
-                  <input type="checkbox" />
+                  <input {...register("days.saturday")} type="checkbox" />
                   SÁBADO
                 </label>
                 <label className="flex items-center gap-1">
-                  <input type="checkbox" />
+                  <input {...register("days.sunday")} type="checkbox" />
                   DOMINGO
                 </label>
               </div>
@@ -183,8 +285,16 @@ export default function Cadastro_feirantes() {
           </div>
 
           <div className="flex justify-center gap-8">
-            <button className="button-default-l">GRAVAR</button>
-            <button className="button-default-l">RETORNAR</button>
+            <button type="submit" className="button-default-l">
+              GRAVAR
+            </button>
+            <button
+              onClick={() => reset()}
+              type="button"
+              className="button-default-l"
+            >
+              RETORNAR
+            </button>
           </div>
         </form>
       </div>

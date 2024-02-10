@@ -5,7 +5,7 @@ import { groupsMock, sectorsMock } from "@/mocks";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { registerFiscalSchema } from "@/schemas";
+import { registerSectorSchema } from "@/schemas";
 import { TInsertSector } from "@/interfaces";
 
 export default function Setores() {
@@ -17,7 +17,7 @@ export default function Setores() {
     reset,
     formState: { errors },
   } = useForm<TInsertSector>({
-    resolver: zodResolver(registerFiscalSchema),
+    resolver: zodResolver(registerSectorSchema),
   });
 
   const onSubmit = (data: TInsertSector) => {
@@ -26,9 +26,7 @@ export default function Setores() {
       {
         ...data,
         id: Math.max(...sectors.map((sector) => sector.id)) + 1,
-        value: Number(
-          data.value.slice(2).replace(/[\.]/g, "").replace(",", ".")
-        ),
+        value: data.value,
       },
     ]);
     reset();

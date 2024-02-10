@@ -1,21 +1,27 @@
 "use client";
-import { TReadFiscal } from "@/interfaces";
-import { fiscals } from "@/mocks";
+import { TReadFeirantes, TReadFiscals } from "@/interfaces";
+import { feirantesMock, fiscalsMock } from "@/mocks";
 import { createContext, useContext, useState } from "react";
 
 interface IAppProviderData {
-  fiscalList: TReadFiscal[];
-  setFiscalList: React.Dispatch<React.SetStateAction<TReadFiscal[]>>;
+  fiscalList: TReadFiscals[];
+  setFiscalList: React.Dispatch<React.SetStateAction<TReadFiscals[]>>;
+  feirantesList: TReadFeirantes[];
+  setFeirantesList: React.Dispatch<React.SetStateAction<TReadFeirantes[]>>;
 }
 
 const AppContext = createContext<IAppProviderData>({} as IAppProviderData);
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
-  const [fiscalList, setFiscalList] = useState<TReadFiscal[]>(fiscals);
+  const [fiscalList, setFiscalList] = useState<TReadFiscals[]>(fiscalsMock);
+  const [feirantesList, setFeirantesList] =
+    useState<TReadFeirantes[]>(feirantesMock);
 
   return (
     <>
-      <AppContext.Provider value={{ fiscalList, setFiscalList }}>
+      <AppContext.Provider
+        value={{ fiscalList, setFiscalList, feirantesList, setFeirantesList }}
+      >
         {children}
       </AppContext.Provider>
     </>

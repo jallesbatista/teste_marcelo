@@ -1,4 +1,9 @@
-import { TInsertFiscal, TReadFiscal } from "@/interfaces";
+import {
+  TReadFeirantes,
+  TReadFiscals,
+  TReadSectors,
+  TReadFeiras,
+} from "@/interfaces";
 
 export const groupsMock = [
   { id: 1, name: "FEIRA LIVRE" },
@@ -7,17 +12,85 @@ export const groupsMock = [
   { id: 4, name: "TRANSPORTE" },
 ];
 
-export const fiscals: TReadFiscal[] = [
+export const feirantesMock: TReadFeirantes[] = [
   {
     id: 1,
-    name: "teste",
-    email: "teste@gmail.com",
-    address: "Rua do teste, 00",
+    name: "teste feirante",
+    RG: "49.433.379-0",
+    CPF: "000.000.000.00",
+    address: "Rua do teste feirante, 00",
+    qtd_bancas: 2,
+    sector: 7,
+    fone: "(00) 90000-0000",
+    days: {
+      monday: false,
+      sunday: true,
+      tuesday: true,
+      wednesday: false,
+      thrusday: false,
+      friday: false,
+      saturday: true,
+    },
+    fiscalId: 1,
+  },
+];
+
+export const feirasMock: TReadFeiras[] = [
+  {
+    id: 1,
+    date: "2022-01",
+    exercise: "2022",
+    feiraDays: {
+      fryday: 4,
+      monday: 5,
+      saturday: 5,
+      sunday: 5,
+      thrusday: 4,
+      tuesday: 4,
+      wednesday: 4,
+    },
+  },
+  {
+    id: 2,
+    date: "2022-02",
+    exercise: "2022",
+    feiraDays: {
+      fryday: 4,
+      monday: 4,
+      saturday: 4,
+      sunday: 4,
+      thrusday: 4,
+      tuesday: 4,
+      wednesday: 4,
+    },
+  },
+  {
+    id: 3,
+    date: "2022-03",
+    exercise: "2022",
+    feiraDays: {
+      fryday: 4,
+      monday: 4,
+      saturday: 4,
+      sunday: 4,
+      thrusday: 5,
+      tuesday: 5,
+      wednesday: 5,
+    },
+  },
+];
+
+export const fiscalsMock: TReadFiscals[] = [
+  {
+    id: 1,
+    name: "teste fiscal",
+    email: "testefiscal@gmail.com",
+    address: "Rua do teste fiscal, 00",
     fone: "(00) 90000-0000",
   },
 ];
 
-export const sectorsMock = [
+export const sectorsMock: TReadSectors[] = [
   {
     id: 1,
     description: "FRUTAS, VERDURAS E LEGUMES",

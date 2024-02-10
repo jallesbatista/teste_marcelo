@@ -1,8 +1,7 @@
 "use client";
 import { useAppContext } from "@/context";
 import { PhoneMask } from "@/functions/masks";
-import { TInsertFiscal, TReadFiscal } from "@/interfaces";
-import { fiscals } from "@/mocks";
+import { TInsertFiscal, TReadFiscals } from "@/interfaces";
 import { registerFiscalSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -26,7 +25,12 @@ export default function CadastroFiscal() {
   const onSubmit = (data: TInsertFiscal) => {
     setFiscalList([
       ...fiscalList,
-      { id: Math.max(...fiscalList.map((fiscal) => fiscal.id)) + 1, ...data },
+      {
+        id: fiscalList.length
+          ? Math.max(...fiscalList.map((fiscal) => fiscal.id)) + 1
+          : 1,
+        ...data,
+      },
     ]);
     reset();
   };
