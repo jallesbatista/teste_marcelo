@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  }
+}
+
+body {
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.wrapper {
+  @apply flex justify-center w-full min-h-screen bg-wrapper;
+}
+
+.field {
+  border: rgba(141, 141, 141, 0.416) solid 1px;
+  min-width: 10px;
+}
+
+input,
+select,
+textarea {
+  @apply outline-none font-normal border-[1px] border-black rounded-sm box-border h-7;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  @apply border-[3px] border-[yellow];
+}
+
+.table-default {
+  width: 100%;
+}
+
+.table-default,
+tr,
+td,
+th {
+  @apply border-2 border-black border-solid;
+}
+
+.table-default td {
+  @apply bg-[white];
+}
+
+.button-default {
+  @apply bg-[lightgrey]  border-4 border-[transparent] ease-linear duration-100 cursor-pointer;
+}
+
+.button-menu > input ~ label {
+  @apply bg-[lightgrey]  border-4 border-[transparent] ease-linear duration-100 cursor-pointer;
+}
+
+.button-menu > input:checked ~ label {
+  @apply bg-[white];
+}
+
+.button-menu:focus {
+  @apply bg-[white];
+}
+
+.button-menu:checked {
+  @apply bg-[white] translate-y-2;
+}
+
+.button-default:hover {
+  @apply bg-[#d9d9d9];
+}
+
+.button-default:active {
+  @apply border-[#0b6adb] scale-95;
+}
+
+.button-close {
+  @apply bg-[red] font-normal;
+}
+
+.modal {
+  @apply shadow-md max-w-[1000px] h-max mt-[50px] bg-[#BDD6F5] text-black w-[95%] rounded-xl border-[0px] rounded-[2px] border-white border-r-[grey] border-b-[grey];
+}
+
+.navigation-link {
+  @apply ease-linear duration-100;
+}
+
+.navigation-link:hover {
+  @apply bg-[#0b6adb] text-[white];
+}
