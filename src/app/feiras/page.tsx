@@ -154,6 +154,7 @@ export default function Feiras() {
                             type="number"
                             className="w-full input-default "
                             max={feira?.monday}
+                            min={0}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
@@ -163,6 +164,7 @@ export default function Feiras() {
                             type="number"
                             className="w-full input-default "
                             max={feira?.tuesday}
+                            min={0}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
@@ -172,6 +174,7 @@ export default function Feiras() {
                             type="number"
                             className="w-full input-default "
                             max={feira?.wednesday}
+                            min={0}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
@@ -181,6 +184,7 @@ export default function Feiras() {
                             type="number"
                             className="w-full input-default "
                             max={feira?.thrusday}
+                            min={0}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
@@ -190,6 +194,7 @@ export default function Feiras() {
                             type="number"
                             className="w-full input-default "
                             max={feira?.fryday}
+                            min={0}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
@@ -199,6 +204,7 @@ export default function Feiras() {
                             type="number"
                             className="w-full input-default "
                             max={feira?.saturday}
+                            min={0}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
@@ -208,6 +214,7 @@ export default function Feiras() {
                             type="number"
                             className="w-full input-default "
                             max={feira?.sunday}
+                            min={0}
                           />
                         </label>
                       </div>
