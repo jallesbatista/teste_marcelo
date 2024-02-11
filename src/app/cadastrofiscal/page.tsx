@@ -1,7 +1,7 @@
 "use client";
 import { useAppContext } from "@/context";
 import { PhoneMask } from "@/functions/masks";
-import { TInsertFiscal, TReadFiscals } from "@/interfaces";
+import { TInsertFiscal } from "@/interfaces";
 import { registerFiscalSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -26,9 +26,7 @@ export default function CadastroFiscal() {
     setFiscalList([
       ...fiscalList,
       {
-        id: fiscalList.length
-          ? Math.max(...fiscalList.map((fiscal) => fiscal.id)) + 1
-          : 1,
+        id: fiscalList.length ? Math.max(...fiscalList.map((fiscal) => fiscal.id)) + 1 : 1,
         ...data,
       },
     ]);
@@ -81,10 +79,7 @@ export default function CadastroFiscal() {
                 </label>
 
                 <div className="flex gap-4 items-end justify-end w-[30%]">
-                  <button
-                    type="submit"
-                    className="button-default px-[20px] py-2"
-                  >
+                  <button type="submit" className="button-default px-[20px] py-2">
                     Inserir
                   </button>
                   <button
@@ -127,16 +122,10 @@ export default function CadastroFiscal() {
                       {fiscalsFiltreds.map((fiscal) => (
                         <tr key={fiscal.id}>
                           <td>{fiscal.id}</td>
-                          <td className="text-nowrap text-ellipsis">
-                            {fiscal.email}
-                          </td>
+                          <td className="text-nowrap text-ellipsis">{fiscal.email}</td>
 
-                          <td className="text-nowrap  text-ellipsis">
-                            {fiscal.name}
-                          </td>
-                          <td className="text-nowrap text-ellipsis ">
-                            {fiscal.fone}
-                          </td>
+                          <td className="text-nowrap  text-ellipsis">{fiscal.name}</td>
+                          <td className="text-nowrap text-ellipsis ">{fiscal.fone}</td>
                         </tr>
                       ))}
                     </tbody>

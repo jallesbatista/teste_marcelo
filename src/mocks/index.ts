@@ -1,9 +1,4 @@
-import {
-  TReadFeirantes,
-  TReadFiscals,
-  TReadSectors,
-  TReadFeiras,
-} from "@/interfaces";
+import { TReadFeirantes, TReadFiscals, TReadSectors, TReadFeiras, TReadUser } from "@/interfaces";
 
 export const groupsMock = [
   { id: 1, name: "FEIRA LIVRE" },
@@ -11,6 +6,8 @@ export const groupsMock = [
   { id: 3, name: "MERCADO HORTFRUITGRANJEIRO" },
   { id: 4, name: "TRANSPORTE" },
 ];
+
+export const userMock: TReadUser = { id: 1, email: "teste@gmail.com", password: "123456" };
 
 export const feirantesMock: TReadFeirantes[] = [
   {
@@ -20,11 +17,32 @@ export const feirantesMock: TReadFeirantes[] = [
     CPF: "000.000.000.00",
     address: "Rua do teste feirante, 00",
     qtd_bancas: 2,
-    sector: 7,
+    sectorId: 6,
     fone: "(00) 90000-0000",
     days: {
       monday: false,
-      sunday: true,
+      sunday: false,
+      tuesday: false,
+      wednesday: true,
+      thrusday: false,
+      friday: false,
+      saturday: true,
+    },
+    fiscalId: 1,
+    natureza: "FEIRA LIVRE",
+  },
+  {
+    id: 2,
+    name: "teste feirante2",
+    RG: "49.433.378-0",
+    CPF: "000.000.000.01",
+    address: "Rua do teste feirante, 00",
+    qtd_bancas: 1,
+    sectorId: 6,
+    fone: "(00) 90000-0000",
+    days: {
+      monday: false,
+      sunday: false,
       tuesday: true,
       wednesday: false,
       thrusday: false,
@@ -32,6 +50,7 @@ export const feirantesMock: TReadFeirantes[] = [
       saturday: true,
     },
     fiscalId: 1,
+    natureza: "FEIRA LIVRE",
   },
 ];
 

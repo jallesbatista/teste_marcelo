@@ -4,10 +4,12 @@ import {
   readFeirasSchema,
   readFiscalsSchema,
   readSectorSchema,
+  readUserSchema,
   registerFeiranteSchema,
   registerFeirasSchema,
   registerFiscalSchema,
   registerSectorSchema,
+  registerUserSchema,
 } from "@/schemas";
 import { z } from "zod";
 
@@ -20,3 +22,5 @@ export type TReadFeirantes = z.infer<typeof readFeiranteSchema>;
 export type TRegisterFeiras = z.infer<typeof registerFeirasSchema>;
 export type TReadFeiras = z.infer<typeof readFeirasSchema>;
 export type TFeiraDays = z.infer<typeof feiraDaysSchema>;
+export type TReadUser = z.infer<typeof readUserSchema>;
+export type TUser = z.infer<typeof registerUserSchema>;

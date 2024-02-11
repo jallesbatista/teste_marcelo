@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       backgroundImage: {},
       colors: {
-        wrapper: "rgb(0 0 0 / 15%)",
+        wrapper: "#026aff12",
       },
     },
   },

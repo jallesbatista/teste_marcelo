@@ -1,15 +1,15 @@
 "use client";
 
-import { BrlCurrencyMask, OnlyNumbersMask } from "@/functions/masks";
-import { groupsMock, sectorsMock } from "@/mocks";
-import { useState } from "react";
+import { BrlCurrencyMask } from "@/functions/masks";
+import { groupsMock } from "@/mocks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { registerSectorSchema } from "@/schemas";
 import { TInsertSector } from "@/interfaces";
+import { useAppContext } from "@/context";
 
 export default function Setores() {
-  const [sectors, setSectors] = useState(sectorsMock);
+  const { sectorsList, setSectorsList } = useAppContext();
 
   const {
     register,
@@ -21,18 +21,16 @@ export default function Setores() {
   });
 
   const onSubmit = (data: TInsertSector) => {
-    setSectors([
-      ...sectors,
+    setSectorsList([
+      ...sectorsList,
       {
         ...data,
-        id: Math.max(...sectors.map((sector) => sector.id)) + 1,
+        id: Math.max(...sectorsList.map((sector) => sector.id)) + 1,
         value: data.value,
       },
     ]);
     reset();
   };
-
-  //  FAZER POP-UP DE INVALIDEZ CASO ADICIONE O MESMO SETOR
 
   return (
     <div className="wrapper">
@@ -42,10 +40,7 @@ export default function Setores() {
           <button className="button-close px-1 py-1">X</button>
         </div>
         <div className="flex flex-col px-[20px] pt-[40px] pb-[80px] gap-4">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex gap-2 justify-between"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2 justify-between">
             <label className="flex flex-col w-[20%]">
               Código
               <input type="text" placeholder="Automático" readOnly />
@@ -87,7 +82,7 @@ export default function Setores() {
             </div>
           </form>
 
-          <div className="overflow-scroll">
+          <div className="overflow-auto">
             <table className="table-default">
               <thead>
                 <tr>
@@ -99,12 +94,10 @@ export default function Setores() {
                 </tr>
               </thead>
               <tbody>
-                {sectors.map((sector) => (
+                {sectorsList.map((sector) => (
                   <tr key={sector.id}>
                     <td>{sector.id}</td>
-                    <td className="text-nowrap text-ellipsis">
-                      {sector.description}
-                    </td>
+                    <td className="text-nowrap text-ellipsis">{sector.description}</td>
                     <td>{sector.value > 8.5 ? 2 : 1}</td>
                     <td>
                       {sector.value.toLocaleString("pt-BR", {
@@ -113,10 +106,7 @@ export default function Setores() {
                       })}
                     </td>
                     <td className="text-nowrap text-ellipsis truncate">
-                      {
-                        groupsMock.find((group) => group.id === sector.group)
-                          ?.name
-                      }
+                      {groupsMock.find((group) => group.id === sector.group)?.name}
                     </td>
                   </tr>
                 ))}

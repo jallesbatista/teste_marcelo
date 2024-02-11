@@ -5,9 +5,7 @@ export const registerSectorSchema = z.object({
   value: z
     .string()
     .min(1)
-    .transform((value) =>
-      Number(value.slice(2).replace(/[\.]/g, "").replace(",", "."))
-    ),
+    .transform((value) => Number(value.slice(2).replace(/[\.]/g, "").replace(",", "."))),
   group: z
     .string()
     .min(1)
@@ -38,7 +36,7 @@ export const registerFeiranteSchema = z.object({
     .string()
     .min(1)
     .transform((bancas) => Number(bancas)),
-  sector: z
+  sectorId: z
     .string()
     .min(1)
     .transform((sector) => Number(sector)),
@@ -57,6 +55,7 @@ export const registerFeiranteSchema = z.object({
     .min(1)
     .transform((bancas) => Number(bancas)),
   file: z.custom<FileList>().optional(),
+  natureza: z.string().min(1),
 });
 
 export const readFeiranteSchema = registerFeiranteSchema.extend({
@@ -64,13 +63,13 @@ export const readFeiranteSchema = registerFeiranteSchema.extend({
 });
 
 export const feiraDaysSchema = z.object({
-  sunday: z.number(),
-  monday: z.number(),
-  tuesday: z.number(),
-  wednesday: z.number(),
-  thrusday: z.number(),
-  fryday: z.number(),
-  saturday: z.number(),
+  sunday: z.string().transform((value) => Number(value)),
+  monday: z.string().transform((value) => Number(value)),
+  tuesday: z.string().transform((value) => Number(value)),
+  wednesday: z.string().transform((value) => Number(value)),
+  thrusday: z.string().transform((value) => Number(value)),
+  fryday: z.string().transform((value) => Number(value)),
+  saturday: z.string().transform((value) => Number(value)),
 });
 
 export const registerFeirasSchema = z.object({
@@ -80,5 +79,14 @@ export const registerFeirasSchema = z.object({
 });
 
 export const readFeirasSchema = registerFeirasSchema.extend({
+  id: z.number(),
+});
+
+export const registerUserSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export const readUserSchema = registerUserSchema.extend({
   id: z.number(),
 });

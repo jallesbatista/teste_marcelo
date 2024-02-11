@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppWrapper } from "@/context";
+import ActiveLink from "@/components/ActiveLink";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,26 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-white`}>
-        <AppWrapper>{children}</AppWrapper>
+        <AppWrapper>
+          <div className="w-full">
+            <header className="w-full bg-grey h-[100px] flex flex-col">
+              <div className="w-full h-full px-2 flex items-center">
+                <h1 className="font-bold ">Nome do Site/App</h1>
+              </div>
+              <div className="w-full flex justify-center">
+                <nav className="flex justify-between gap-6 max-w-[max-content]">
+                  <ActiveLink href={"/feiras"}>Feiras</ActiveLink>
+                  <ActiveLink href={"/setores"}>Setores</ActiveLink>
+                  <ActiveLink href={"/cadastrofiscal"}>Cadastro Fiscal</ActiveLink>
+                  <ActiveLink href={"/cadastrofeirantes"}>Cadastro Feirantes</ActiveLink>
+                  <ActiveLink href={"/cadastro"}>Cadastro</ActiveLink>
+                </nav>
+              </div>
+            </header>
+
+            {children}
+          </div>
+        </AppWrapper>
       </body>
     </html>
   );

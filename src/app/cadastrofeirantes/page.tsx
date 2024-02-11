@@ -3,7 +3,7 @@
 import { useAppContext } from "@/context";
 import { CPFMask, OnlyNumbersMask, PhoneMask } from "@/functions/masks";
 import { TInsertFeirante, TReadSectors } from "@/interfaces";
-import { groupsMock, sectorsMock } from "@/mocks";
+import { groupsMock } from "@/mocks";
 import { registerFeiranteSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
@@ -13,7 +13,10 @@ export default function Cadastro_feirantes() {
   const [sector, setSector] = useState<TReadSectors>();
   const [qtdBancas, setQtdBancas] = useState<number>(1);
   const [totalValue, setTotalValue] = useState<number>(0);
+  const [natureza, setNatureza] = useState<string>("");
   const { fiscalList, feirantesList, setFeirantesList } = useAppContext();
+
+  const { sectorsList } = useAppContext();
 
   const previewImageRef = useRef<HTMLImageElement>(null);
 
@@ -32,10 +35,6 @@ export default function Cadastro_feirantes() {
     resolver: zodResolver(registerFeiranteSchema),
   });
 
-  useEffect(() => {
-    console.log(feirantesList);
-  }, [feirantesList]);
-
   const onSubmit = (data: TInsertFeirante) => {
     setFeirantesList([
       ...feirantesList,
@@ -46,7 +45,6 @@ export default function Cadastro_feirantes() {
           : 1,
       },
     ]);
-
     reset();
     setSector(undefined);
     setQtdBancas(1);
@@ -128,13 +126,13 @@ export default function Cadastro_feirantes() {
                   />
                 </label>
 
-                <label className="flex flex-col w-[40%]">
+                <label className="flex flex-col w-[30%]">
                   SETOR
                   <select
                     className="input-default"
-                    {...register("sector", {
+                    {...register("sectorId", {
                       onChange(e: React.ChangeEvent<HTMLInputElement>) {
-                        const sector = sectorsMock.find(
+                        const sector = sectorsList.find(
                           (sector) => sector.id == Number(e.target.value)
                         );
                         setSector(sector);
@@ -142,7 +140,7 @@ export default function Cadastro_feirantes() {
                     })}
                   >
                     <option value={""}>Selecionar</option>
-                    {sectorsMock.map((sector) => (
+                    {sectorsList.map((sector) => (
                       <option key={sector.id} value={sector.id}>
                         {sector.description}
                       </option>
@@ -164,10 +162,7 @@ export default function Cadastro_feirantes() {
                         currency: "BRL",
                         maximumFractionDigits: 4,
                       })}{" "}
-                      {/* {
-                        groupsMock.find((group) => group.id == sector?.group!)
-                          ?.name
-                      } */}
+                      {natureza}
                     </span>
                   )}
                 </label>
@@ -202,7 +197,16 @@ export default function Cadastro_feirantes() {
 
                 <label className="flex flex-col  w-[40%]">
                   Natureza
-                  <select className="input-default">
+                  <select
+                    className="input-default"
+                    {...register("natureza", {
+                      required: true,
+                      onChange(e: React.ChangeEvent<HTMLSelectElement>) {
+                        setNatureza(e.target.value);
+                      },
+                    })}
+                  >
+                    <option value={""}>SELECIONAR</option>
                     {groupsMock.map((group) => (
                       <option key={group.id} value={group.name}>
                         {group.name}
@@ -215,7 +219,7 @@ export default function Cadastro_feirantes() {
 
             <div className="flex flex-col gap-[12px] w-[25%]">
               <fieldset className="field h-full min-h-[10px]">
-                <legend>FOTO</legend>
+                <legend className="ml-3">FOTO</legend>
                 <img className="m-w-full m-h-full" ref={previewImageRef} />
               </fieldset>
 
@@ -285,14 +289,10 @@ export default function Cadastro_feirantes() {
           </div>
 
           <div className="flex justify-center gap-8">
-            <button type="submit" className="button-default-l">
+            <button type="submit" className="button-default px-2 py-6">
               GRAVAR
             </button>
-            <button
-              onClick={() => reset()}
-              type="button"
-              className="button-default-l"
-            >
+            <button onClick={() => reset()} type="button" className="button-default px-2 py-6">
               RETORNAR
             </button>
           </div>
