@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 
 export default function Feiras() {
   const [feirasList, setFeirasList] = useState<TReadFeiras[]>(feirasMock);
+  const [feira, setFeira] = useState<TFeiraDays>();
 
   const {
     register,
@@ -111,6 +112,8 @@ export default function Feiras() {
                                 };
                               }
                             }
+                            setFeira(feiras);
+
                             const feirasStringArray = Object.entries(feiras).map((value) => [
                               value[0],
                               String(value[1]),
@@ -148,63 +151,63 @@ export default function Feiras() {
                           Segunda
                           <input
                             {...register("feiraDays.monday")}
-                            type="text"
-                            readOnly
+                            type="number"
                             className="w-full input-default "
+                            max={feira?.monday}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
                           Terça
                           <input
                             {...register("feiraDays.tuesday")}
-                            type="text"
-                            readOnly
+                            type="number"
                             className="w-full input-default "
+                            max={feira?.tuesday}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
                           Quarta
                           <input
                             {...register("feiraDays.wednesday")}
-                            type="text"
-                            readOnly
+                            type="number"
                             className="w-full input-default "
+                            max={feira?.wednesday}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
                           Quinta
                           <input
                             {...register("feiraDays.thrusday")}
-                            type="text"
-                            readOnly
+                            type="number"
                             className="w-full input-default "
+                            max={feira?.thrusday}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
                           Sexta
                           <input
                             {...register("feiraDays.fryday")}
-                            type="text"
-                            readOnly
+                            type="number"
                             className="w-full input-default "
+                            max={feira?.fryday}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
                           Sábado
                           <input
                             {...register("feiraDays.saturday")}
-                            type="text"
-                            readOnly
+                            type="number"
                             className="w-full input-default "
+                            max={feira?.saturday}
                           />
                         </label>
                         <label className="flex flex-col font-bold">
                           Domingo
                           <input
                             {...register("feiraDays.sunday")}
-                            type="text"
-                            readOnly
+                            type="number"
                             className="w-full input-default "
+                            max={feira?.sunday}
                           />
                         </label>
                       </div>
