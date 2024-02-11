@@ -1,6 +1,7 @@
 "use client";
 import { TReadFeirantes, TReadFiscals, TReadSectors, TReadUser, TUser } from "@/interfaces";
 import { feirantesMock, fiscalsMock, sectorsMock } from "@/mocks";
+import dynamic from "next/dynamic";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface IAppProviderData {
@@ -18,11 +19,11 @@ interface IAppProviderData {
 const AppContext = createContext<IAppProviderData>({} as IAppProviderData);
 
 function getInitialState() {
-  const feirantes = localStorage.getItem("@feirantes");
+  const feirantes = window.localStorage.getItem("@feirantes");
   return feirantes ? JSON.parse(feirantes) : feirantesMock;
 }
 
-export function AppWrapper({ children }: { children: React.ReactNode }) {
+function AppWrapper({ children }: { children: React.ReactNode }) {
   const [fiscalList, setFiscalList] = useState<TReadFiscals[]>(fiscalsMock);
   const [feirantesList, setFeirantesList] = useState<TReadFeirantes[]>(getInitialState);
   const [sectorsList, setSectorsList] = useState<TReadSectors[]>(sectorsMock);
@@ -88,6 +89,10 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
     </>
   );
 }
+
+export default dynamic(() => Promise.resolve(AppWrapper), {
+  ssr: false,
+});
 
 export function useAppContext() {
   return useContext(AppContext);
