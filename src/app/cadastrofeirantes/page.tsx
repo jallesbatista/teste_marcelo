@@ -3,8 +3,8 @@
 import { useAppContext } from "@/context";
 import { CPFMask, OnlyNumbersMask, PhoneMask } from "@/functions/masks";
 import { TInsertFeirante, TReadSectors } from "@/interfaces";
-import { groupsMock } from "@/mocks";
-import { registerFeiranteSchema } from "@/schemas";
+import { gruposMock } from "@/mocks";
+import { registerFeiranteSchema } from "@/schemas/feirantes.schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -21,8 +21,8 @@ export default function Cadastro_feirantes() {
   const previewImageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    if (sector?.value) {
-      setTotalValue(+qtdBancas * 3.56 * Number(sector?.value));
+    if (sector?.valor) {
+      setTotalValue(+qtdBancas * 3.56 * Number(sector?.valor));
     }
   }, [qtdBancas, sector]);
 
@@ -133,7 +133,7 @@ export default function Cadastro_feirantes() {
                     {...register("sectorId", {
                       onChange(e: React.ChangeEvent<HTMLInputElement>) {
                         const sector = sectorsList.find(
-                          (sector) => sector.id == Number(e.target.value)
+                          (sector) => sector.codigo == Number(e.target.value)
                         );
                         setSector(sector);
                       },
@@ -141,8 +141,8 @@ export default function Cadastro_feirantes() {
                   >
                     <option value={""}>Selecionar</option>
                     {sectorsList.map((sector) => (
-                      <option key={sector.id} value={sector.id}>
-                        {sector.description}
+                      <option key={sector.codigo} value={sector.codigo}>
+                        {sector.setor}
                       </option>
                     ))}
                   </select>
@@ -150,7 +150,7 @@ export default function Cadastro_feirantes() {
 
                 <label className="flex flex-col w-[10%]">
                   VL. M2
-                  <input type="number" readOnly value={sector?.value || ""} />
+                  <input type="number" readOnly value={sector?.valor || ""} />
                 </label>
 
                 <label className="flex flex-col w-auto">
@@ -189,7 +189,7 @@ export default function Cadastro_feirantes() {
                     <option value={""}> Selecionar</option>
                     {fiscalList.map((fiscal) => (
                       <option key={fiscal.id} value={fiscal.id}>
-                        {fiscal.name}
+                        {fiscal.nome}
                       </option>
                     ))}
                   </select>
@@ -207,7 +207,7 @@ export default function Cadastro_feirantes() {
                     })}
                   >
                     <option value={""}>SELECIONAR</option>
-                    {groupsMock.map((group) => (
+                    {gruposMock.map((group) => (
                       <option key={group.id} value={group.name}>
                         {group.name}
                       </option>

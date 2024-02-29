@@ -1,15 +1,15 @@
 "use client";
 
 import { BrlCurrencyMask } from "@/functions/masks";
-import { groupsMock } from "@/mocks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { registerSectorSchema } from "@/schemas";
 import { TInsertSector } from "@/interfaces";
 import { useAppContext } from "@/context";
+import { registerSectorSchema } from "@/schemas/setores.schemas";
+import { gruposMock } from "@/mocks";
 
 export default function Setores() {
-  const { sectorsList, setSectorsList } = useAppContext();
+  const { sectorsList, setSectorsList, createSetoresRequest } = useAppContext();
 
   const {
     register,
@@ -20,15 +20,13 @@ export default function Setores() {
     resolver: zodResolver(registerSectorSchema),
   });
 
-  const onSubmit = (data: TInsertSector) => {
-    setSectorsList([
-      ...sectorsList,
-      {
-        ...data,
-        id: Math.max(...sectorsList.map((sector) => sector.id)) + 1,
-        value: data.value,
-      },
-    ]);
+  const onSubmit = async (data: TInsertSector) => {
+    const newSector = await createSetoresRequest(data);
+
+    if (newSector) {
+      setSectorsList([...sectorsList, newSector]);
+    }
+
     reset();
   };
 
@@ -49,13 +47,13 @@ export default function Setores() {
             <div className="flex w-[70%] gap-1">
               <label className="flex flex-col w-[50%]">
                 Descrição
-                <input type="text" {...register("description")} />
+                <input type="text" {...register("setor")} />
               </label>
               <label className="flex flex-col w-[20%]">
                 Valor
                 <input
                   type="text"
-                  {...register("value", {
+                  {...register("valor", {
                     onChange(e: React.ChangeEvent<HTMLInputElement>) {
                       BrlCurrencyMask(e);
                     },
@@ -64,10 +62,10 @@ export default function Setores() {
               </label>
               <label className="flex flex-col w-[30%]">
                 Grupo
-                <select {...register("group")}>
+                <select {...register("grupo")}>
                   <option value={""}></option>
-                  {groupsMock.map((group) => (
-                    <option key={group.id} value={group.id}>
+                  {gruposMock.map((group) => (
+                    <option key={group.id} value={group.name}>
                       {group.name}
                     </option>
                   ))}
@@ -95,19 +93,17 @@ export default function Setores() {
               </thead>
               <tbody>
                 {sectorsList.map((sector) => (
-                  <tr key={sector.id}>
-                    <td>{sector.id}</td>
-                    <td className="text-nowrap text-ellipsis">{sector.description}</td>
-                    <td>{sector.value > 8.5 ? 2 : 1}</td>
+                  <tr key={sector.codigo}>
+                    <td>{sector.codigo}</td>
+                    <td className="text-nowrap text-ellipsis">{sector.setor}</td>
+                    <td>{sector.padrao}</td>
                     <td>
-                      {sector.value.toLocaleString("pt-BR", {
+                      {sector.valor.toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
                       })}
                     </td>
-                    <td className="text-nowrap text-ellipsis truncate">
-                      {groupsMock.find((group) => group.id === sector.group)?.name}
-                    </td>
+                    <td className="text-nowrap text-ellipsis truncate">{sector.grupo}</td>
                   </tr>
                 ))}
               </tbody>

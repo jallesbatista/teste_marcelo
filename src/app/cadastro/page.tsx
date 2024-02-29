@@ -43,7 +43,7 @@ export default function Cadastro() {
                   <option value={""}> Selecionar</option>
                   {fiscalList.map((fiscal) => (
                     <option key={fiscal.id} value={fiscal.id}>
-                      {fiscal.name}
+                      {fiscal.nome}
                     </option>
                   ))}
                 </select>
@@ -69,8 +69,8 @@ export default function Cadastro() {
                 <select className="input-default">
                   <option value={""}>SELECIONAR</option>
                   {sectorsList.map((sector) => (
-                    <option key={sector.id} value={sector.id}>
-                      {sector.description}
+                    <option key={sector.codigo} value={sector.codigo}>
+                      {sector.setor}
                     </option>
                   ))}
                 </select>
@@ -236,7 +236,8 @@ export default function Cadastro() {
                       <tbody>
                         {feirantesList.map((feirante) => {
                           const initialValue =
-                            sectorsList.find((sector) => sector.id == feirante.sectorId)?.value! *
+                            sectorsList.find((sector) => sector.codigo == feirante.sectorId)
+                              ?.valor! *
                             feirante.qtd_bancas *
                             3.56;
 
@@ -263,8 +264,8 @@ export default function Cadastro() {
                               <td className="text-nowrap text-ellipsis">00000</td>
                               <td className="text-nowrap text-ellipsis">
                                 {
-                                  sectorsList.find((sector) => sector.id == feirante.sectorId)
-                                    ?.description
+                                  sectorsList.find((sector) => sector.codigo == feirante.sectorId)
+                                    ?.setor
                                 }
                               </td>
                               <td className="text-nowrap text-ellipsis">{feirante.qtd_bancas}</td>

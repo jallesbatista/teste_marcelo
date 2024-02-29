@@ -1,9 +1,9 @@
 "use client";
 
 import { useAppContext } from "@/context";
-import { TUser } from "@/interfaces";
+import { TInsertUser } from "@/interfaces";
 import { userMock } from "@/mocks";
-import { registerUserSchema } from "@/schemas";
+import { registerUserSchema } from "@/schemas/usuarios.schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -13,7 +13,7 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TUser>({
+  } = useForm<TInsertUser>({
     resolver: zodResolver(registerUserSchema),
   });
 
@@ -21,8 +21,8 @@ export default function Login() {
 
   const { setUser } = useAppContext();
 
-  const onSubmit = (data: TUser) => {
-    if (data.email == userMock.email && data.password == userMock.password) {
+  const onSubmit = (data: TInsertUser) => {
+    if (data.email == userMock.email && data.senha == userMock.senha) {
       setUser(userMock);
       router.push("/feiras");
     }
@@ -48,7 +48,7 @@ export default function Login() {
               <label className="flex flex-col gap-2">
                 Password:
                 <input
-                  {...register("password")}
+                  {...register("senha")}
                   className="px-1 py-4"
                   type="password"
                   placeholder="********"

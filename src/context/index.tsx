@@ -1,6 +1,15 @@
 "use client";
-import { TReadFeirantes, TReadFiscals, TReadSectors, TReadUser, TUser } from "@/interfaces";
-import { feirantesMock, fiscalsMock, sectorsMock } from "@/mocks";
+import {
+  TInsertFeiras,
+  TInsertSector,
+  TReadFeirantes,
+  TReadFeiras,
+  TReadFiscals,
+  TReadSectors,
+  TReadUser,
+} from "@/interfaces";
+import { feirantesMock, sectorsMock } from "@/mocks";
+import api from "@/services";
 import dynamic from "next/dynamic";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -14,6 +23,10 @@ interface IAppProviderData {
   switchToTranslateDays: (expr: string[]) => string;
   user: TReadUser | null;
   setUser: React.Dispatch<React.SetStateAction<TReadUser | null>>;
+  feirasList: TReadFeiras[];
+  setFeirasList: React.Dispatch<React.SetStateAction<TReadFeiras[]>>;
+  createFeirasRequest: (feiraData: TInsertFeiras) => Promise<false | TReadFeiras>;
+  createSetoresRequest: (sectorData: TInsertSector) => Promise<false | TReadSectors>;
 }
 
 const AppContext = createContext<IAppProviderData>({} as IAppProviderData);
@@ -24,10 +37,64 @@ function getInitialState() {
 }
 
 function AppWrapper({ children }: { children: React.ReactNode }) {
-  const [fiscalList, setFiscalList] = useState<TReadFiscals[]>(fiscalsMock);
+  const [feirasList, setFeirasList] = useState<TReadFeiras[]>([]);
+  const [fiscalList, setFiscalList] = useState<TReadFiscals[]>([]);
   const [feirantesList, setFeirantesList] = useState<TReadFeirantes[]>(getInitialState);
-  const [sectorsList, setSectorsList] = useState<TReadSectors[]>(sectorsMock);
+  const [sectorsList, setSectorsList] = useState<TReadSectors[]>([]);
   const [user, setUser] = useState<TReadUser | null>(null);
+
+  const createFeirasRequest = async (feiraData: TInsertFeiras) => {
+    try {
+      const { data }: { data: TReadFeiras } = await api.post("/feiras", feiraData);
+      return data;
+    } catch (error: any) {
+      console.log(error?.response?.data || error?.message);
+      return false;
+    }
+  };
+
+  const getFeirasRequest = async () => {
+    try {
+      const { data }: { data: TReadFeiras[] } = await api.get("/feiras");
+      setFeirasList(data);
+    } catch (error: any) {
+      console.log(error?.response?.data || error?.message);
+    }
+  };
+
+  const getFiscaisRequest = async () => {
+    try {
+      const { data }: { data: TReadFiscals[] } = await api.get("/fiscais");
+      setFiscalList(data);
+    } catch (error: any) {
+      console.log(error?.response?.data || error?.message);
+    }
+  };
+
+  const getSetoresRequest = async () => {
+    try {
+      const { data }: { data: TReadSectors[] } = await api.get("/setores");
+      setSectorsList(data);
+    } catch (error: any) {
+      console.log(error?.response?.data || error?.message);
+    }
+  };
+
+  const createSetoresRequest = async (sectorData: TInsertSector) => {
+    try {
+      const { data }: { data: TReadSectors } = await api.post("/setores", sectorData);
+      return data;
+    } catch (error: any) {
+      console.log(error?.response?.data || error?.message);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    getFeirasRequest();
+    getFiscaisRequest();
+    getSetoresRequest();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("@feirantes", JSON.stringify(feirantesList));
@@ -82,6 +149,10 @@ function AppWrapper({ children }: { children: React.ReactNode }) {
           switchToTranslateDays,
           user,
           setUser,
+          feirasList,
+          setFeirasList,
+          createFeirasRequest,
+          createSetoresRequest,
         }}
       >
         {children}

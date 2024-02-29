@@ -1,34 +1,36 @@
 "use client";
 
-import { TFeiraDays, TReadFeiras, TRegisterFeiras } from "@/interfaces";
-import { feirasMock } from "@/mocks";
-import { registerFeirasSchema } from "@/schemas";
+import { useAppContext } from "@/context";
+import { TFeiraDays, TInsertFeiras } from "@/interfaces";
+import { monthListMock } from "@/mocks";
+import { registerFeirasSchema } from "@/schemas/feiras.schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function Feiras() {
-  const [feirasList, setFeirasList] = useState<TReadFeiras[]>(feirasMock);
+  const { feirasList, setFeirasList, createFeirasRequest } = useAppContext();
   const [feira, setFeira] = useState<TFeiraDays>();
 
   const {
     register,
-    setValue,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TRegisterFeiras>({
+  } = useForm<TInsertFeiras>({
     resolver: zodResolver(registerFeirasSchema),
   });
 
-  const onSubmit = (data: any) => {
-    setFeirasList([
-      ...feirasList,
-      {
-        ...data,
-        id: feirasList.length ? Math.max(...feirasList.map((feira) => feira.id)) + 1 : 1,
-      },
-    ]);
+  const onSubmit = async (data: TInsertFeiras) => {
+    const newFeira = await createFeirasRequest(data);
+
+    if (newFeira) {
+      setFeirasList(
+        [...feirasList, newFeira]
+          .sort((a, b) => a.Mes_n! - b.Mes_n!)
+          .sort((a, b) => Number(a.exercicio) - Number(b.exercicio))
+      );
+    }
   };
 
   return (
@@ -51,13 +53,13 @@ export default function Feiras() {
                         {...register("date", {
                           onChange(e: React.ChangeEvent<HTMLInputElement>) {
                             let feiras: TFeiraDays = {
-                              sunday: 0,
-                              monday: 0,
-                              tuesday: 0,
-                              thrusday: 0,
-                              wednesday: 0,
-                              fryday: 0,
-                              saturday: 0,
+                              domingo: 0,
+                              segunda: 0,
+                              terca: 0,
+                              quarta: 0,
+                              quinta: 0,
+                              sexta: 0,
+                              sabado: 0,
                             };
 
                             const year = Number(e.target.value.slice(0, 4));
@@ -72,43 +74,43 @@ export default function Feiras() {
                               if (newDate.getDay() == 0) {
                                 feiras = {
                                   ...feiras,
-                                  sunday: feiras.sunday + 1,
+                                  domingo: feiras.domingo + 1,
                                 };
                               }
                               if (newDate.getDay() == 1) {
                                 feiras = {
                                   ...feiras,
-                                  monday: feiras.monday + 1,
+                                  segunda: feiras.segunda + 1,
                                 };
                               }
                               if (newDate.getDay() == 2) {
                                 feiras = {
                                   ...feiras,
-                                  tuesday: feiras.tuesday + 1,
+                                  terca: feiras.terca + 1,
                                 };
                               }
                               if (newDate.getDay() == 3) {
                                 feiras = {
                                   ...feiras,
-                                  wednesday: feiras.wednesday + 1,
+                                  quarta: feiras.quarta + 1,
                                 };
                               }
                               if (newDate.getDay() == 4) {
                                 feiras = {
                                   ...feiras,
-                                  thrusday: feiras.thrusday + 1,
+                                  quinta: feiras.quinta + 1,
                                 };
                               }
                               if (newDate.getDay() == 5) {
                                 feiras = {
                                   ...feiras,
-                                  fryday: feiras.fryday + 1,
+                                  sexta: feiras.sexta + 1,
                                 };
                               }
                               if (newDate.getDay() == 6) {
                                 feiras = {
                                   ...feiras,
-                                  saturday: feiras.saturday + 1,
+                                  sabado: feiras.sabado + 1,
                                 };
                               }
                             }
@@ -122,9 +124,10 @@ export default function Feiras() {
                             const feirasObjectData = Object.fromEntries(feirasStringArray);
 
                             reset({
-                              feiraDays: feirasObjectData,
-                              exercise: String(year),
+                              ...feirasObjectData,
+                              exercicio: String(year),
                               date: e.target.value,
+                              Mes: monthListMock[month - 1],
                             });
                           },
                         })}
@@ -137,7 +140,7 @@ export default function Feiras() {
                       Exercício
                       <input
                         className="input-default "
-                        {...register("exercise")}
+                        {...register("exercicio")}
                         type="number"
                         min={1950}
                         max={Number(new Date().getFullYear())}
@@ -145,75 +148,75 @@ export default function Feiras() {
                       />
                     </label>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                       <div className="flex flex-row justify-between gap-[2px] w-full">
-                        <label className="flex flex-col font-bold">
+                        <label className="flex flex-col w-full font-bold">
                           Segunda
                           <input
-                            {...register("feiraDays.monday")}
+                            {...register("segunda")}
                             type="number"
                             className="w-full input-default "
-                            max={feira?.monday}
+                            max={feira?.segunda}
                             min={0}
                           />
                         </label>
-                        <label className="flex flex-col font-bold">
+                        <label className="flex flex-col w-full font-bold">
                           Terça
                           <input
-                            {...register("feiraDays.tuesday")}
+                            {...register("terca")}
                             type="number"
                             className="w-full input-default "
-                            max={feira?.tuesday}
+                            max={feira?.terca}
                             min={0}
                           />
                         </label>
-                        <label className="flex flex-col font-bold">
+                        <label className="flex flex-col w-full font-bold">
                           Quarta
                           <input
-                            {...register("feiraDays.wednesday")}
+                            {...register("quarta")}
                             type="number"
                             className="w-full input-default "
-                            max={feira?.wednesday}
+                            max={feira?.quarta}
                             min={0}
                           />
                         </label>
-                        <label className="flex flex-col font-bold">
+                        <label className="flex flex-col w-full font-bold">
                           Quinta
                           <input
-                            {...register("feiraDays.thrusday")}
+                            {...register("quinta")}
                             type="number"
                             className="w-full input-default "
-                            max={feira?.thrusday}
+                            max={feira?.quinta}
                             min={0}
                           />
                         </label>
-                        <label className="flex flex-col font-bold">
+                        <label className="flex flex-col w-full font-bold">
                           Sexta
                           <input
-                            {...register("feiraDays.fryday")}
+                            {...register("sexta")}
                             type="number"
                             className="w-full input-default "
-                            max={feira?.fryday}
+                            max={feira?.sexta}
                             min={0}
                           />
                         </label>
-                        <label className="flex flex-col font-bold">
+                        <label className="flex flex-col w-full font-bold">
                           Sábado
                           <input
-                            {...register("feiraDays.saturday")}
+                            {...register("sabado")}
                             type="number"
                             className="w-full input-default "
-                            max={feira?.saturday}
+                            max={feira?.sabado}
                             min={0}
                           />
                         </label>
-                        <label className="flex flex-col font-bold">
+                        <label className="flex flex-col w-full font-bold">
                           Domingo
                           <input
-                            {...register("feiraDays.sunday")}
+                            {...register("domingo")}
                             type="number"
                             className="w-full input-default "
-                            max={feira?.sunday}
+                            max={feira?.domingo}
                             min={0}
                           />
                         </label>
@@ -250,25 +253,18 @@ export default function Feiras() {
                       </tr>
                     </thead>
                     <tbody>
-                      {feirasList.map((feira) => (
+                      {feirasList?.map((feira) => (
                         <tr key={feira.id}>
                           <td> </td>
-                          <td>{feira.feiraDays.monday}</td>
-                          <td>{feira.feiraDays.tuesday}</td>
-                          <td>{feira.feiraDays.wednesday}</td>
-                          <td>{feira.feiraDays.thrusday}</td>
-                          <td>{feira.feiraDays.fryday}</td>
-                          <td>{feira.feiraDays.saturday}</td>
-                          <td>{feira.feiraDays.sunday}</td>
-                          <td>
-                            {new Date(Number(feira.exercise), Number(feira.date.slice(5)), 0)
-                              .toISOString()
-                              .slice(0, 10)
-                              .split("-")
-                              .reverse()
-                              .join("/")}
-                          </td>
-                          <td>{feira.exercise}</td>
+                          <td>{feira.segunda}</td>
+                          <td>{feira.terca}</td>
+                          <td>{feira.quarta}</td>
+                          <td>{feira.quinta}</td>
+                          <td>{feira.sexta}</td>
+                          <td>{feira.sabado}</td>
+                          <td>{feira.domingo}</td>
+                          <td>{feira.vencimento}</td>
+                          <td>{feira.exercicio}</td>
                         </tr>
                       ))}
                     </tbody>
