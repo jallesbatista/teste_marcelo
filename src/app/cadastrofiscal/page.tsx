@@ -15,22 +15,20 @@ export default function CadastroFiscal() {
     formState: { errors },
   } = useForm<TInsertFiscal>({ resolver: zodResolver(registerFiscalSchema) });
 
-  const { fiscalList, setFiscalList } = useAppContext();
+  const { fiscalList, setFiscalList, createFiscaisRequest } = useAppContext();
   const [fiscalFilter, setFiscalFilter] = useState<string>("");
 
   const fiscalsFiltreds = fiscalList.filter((fiscal) =>
     fiscal.nome.toLowerCase().includes(fiscalFilter.toLowerCase().trim())
   );
 
-  const onSubmit = (data: TInsertFiscal) => {
-    setFiscalList([
-      ...fiscalList,
-      {
-        id: fiscalList.length ? Math.max(...fiscalList.map((fiscal) => fiscal.id)) + 1 : 1,
-        ...data,
-      },
-    ]);
-    reset();
+  const onSubmit = async (fiscalData: TInsertFiscal) => {
+    console.log(fiscalData);
+    const data = await createFiscaisRequest(fiscalData);
+    if (data) {
+      setFiscalList([...fiscalList, data]);
+      reset();
+    }
   };
 
   return (

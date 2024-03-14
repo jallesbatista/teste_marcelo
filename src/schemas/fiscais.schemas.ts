@@ -5,10 +5,37 @@ export const registerFiscalSchema = z.object({
   email: z.string().min(1).email(),
   codigo: z
     .string()
-    .nullable()
+    .nullish()
     .transform((value) => (value ? Number(value) : null)),
-  endereco: z.string().nullable(),
-  fone: z.string().nullable(),
+  endereco: z
+    .string()
+    .nullish()
+    .transform((value) => {
+      return value ? value : null;
+    }),
+  fone: z
+    .string()
+    .nullish()
+    .refine(
+      (value) => {
+        console.log(value);
+        if (value) {
+          return value.length == 15 ? true : false;
+        } else {
+          return true;
+        }
+      },
+      {
+        message: "Deve conter 11 dígitos",
+      }
+    )
+    .refine(
+      (phone) => {
+        return phone ? phone.replace(/\D/g, "").split("")[2] == "9" : true;
+      },
+      { message: "Deve seguir o formato (DDD) 9****-****" }
+    )
+    .transform((value) => (value ? value : "(  )     -    ")),
 });
 
 export const readFiscalsSchema = registerFiscalSchema.extend({

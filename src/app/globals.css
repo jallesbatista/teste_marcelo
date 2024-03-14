@@ -23,6 +23,10 @@ body {
   @apply flex justify-center w-full min-h-screen bg-wrapper;
 }
 
+.modal {
+  @apply shadow-md max-w-[1000px] h-max my-[50px] bg-[#BDD6F5] text-black w-[95%] rounded-xl border-[0px] rounded-[2px] border-white border-r-[grey] border-b-[grey];
+}
+
 .field {
   border: rgba(141, 141, 141, 0.416) solid 1px;
   min-width: 10px;
@@ -48,6 +52,10 @@ tr,
 td,
 th {
   @apply border-2 border-black border-solid;
+}
+
+th {
+  @apply sticky top-[-1px] bg-[#BDD6F5] p-[5px];
 }
 
 .table-default td {
@@ -84,10 +92,6 @@ th {
 
 .button-close {
   @apply bg-[red] font-normal;
-}
-
-.modal {
-  @apply shadow-md max-w-[1000px] h-max my-[50px] bg-[#BDD6F5] text-black w-[95%] rounded-xl border-[0px] rounded-[2px] border-white border-r-[grey] border-b-[grey];
 }
 
 .navigation-link {

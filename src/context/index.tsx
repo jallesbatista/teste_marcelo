@@ -1,6 +1,7 @@
 "use client";
 import {
   TInsertFeiras,
+  TInsertFiscal,
   TInsertSector,
   TReadFeirantes,
   TReadFeiras,
@@ -27,6 +28,7 @@ interface IAppProviderData {
   setFeirasList: React.Dispatch<React.SetStateAction<TReadFeiras[]>>;
   createFeirasRequest: (feiraData: TInsertFeiras) => Promise<false | TReadFeiras>;
   createSetoresRequest: (sectorData: TInsertSector) => Promise<false | TReadSectors>;
+  createFiscaisRequest: (fiscalData: TInsertFiscal) => Promise<false | TReadFiscals>;
 }
 
 const AppContext = createContext<IAppProviderData>({} as IAppProviderData);
@@ -68,6 +70,17 @@ function AppWrapper({ children }: { children: React.ReactNode }) {
       setFiscalList(data);
     } catch (error: any) {
       console.log(error?.response?.data || error?.message);
+    }
+  };
+
+  const createFiscaisRequest = async (fiscalData: TInsertFiscal) => {
+    try {
+      const { data }: { data: TReadFiscals } = await api.post("/fiscais", fiscalData);
+      console.log(data);
+      return data;
+    } catch (error: any) {
+      console.log(error?.response?.data || error?.message);
+      return false;
     }
   };
 
@@ -153,6 +166,7 @@ function AppWrapper({ children }: { children: React.ReactNode }) {
           setFeirasList,
           createFeirasRequest,
           createSetoresRequest,
+          createFiscaisRequest,
         }}
       >
         {children}

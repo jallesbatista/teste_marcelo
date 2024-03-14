@@ -80,9 +80,9 @@ export default function Setores() {
             </div>
           </form>
 
-          <div className="overflow-auto">
+          <div className="overflow-auto max-h-[435px]">
             <table className="table-default">
-              <thead>
+              <thead >
                 <tr>
                   <th className="text-start">Código</th>
                   <th className="text-start">Descrição</th>
